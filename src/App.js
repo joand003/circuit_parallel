@@ -4,18 +4,23 @@ import Voltage from './components/Voltage';
 import Current from './components/Current';
 import Resistance from './components/Resistance';
 import './App.css';
-import Series2 from './Series2.jpg';
+import Parallel2 from './Parallel2.jpg';
 import randomNumber from './randomNumbers';
 import * as actionTypes from './store/actionTypes';
 
 function App(props) {
   // Circuit Variables
-  const resistanceTotal = props.resistance1 + props.resistance2;
+  const invertedResistances = 1 / props.resistance1 + 1 / props.resistance2;
+  const resistanceTotal = 1 / invertedResistances;
 
   const currentTotal =
     Math.floor((props.voltageTotal / resistanceTotal) * 1000) / 1000;
-  const voltageOne = Math.floor(currentTotal * props.resistance1 * 1000) / 1000;
-  const voltageTwo = Math.floor(currentTotal * props.resistance2 * 1000) / 1000;
+  const voltageOne = props.voltageTotal;
+  const voltageTwo = props.voltageTotal;
+  const currentOne =
+    Math.floor((props.voltageTotal / props.resistance1) * 1000) / 1000;
+  const currentTwo =
+    Math.floor((props.voltageTotal / props.resistance2) * 1000) / 1000;
 
   const checkAnswers = () => {
     // Resistance Total
@@ -58,8 +63,8 @@ function App(props) {
     }
     // Current 1
     if (
-      props.userCurrent1 > currentTotal * 0.95 &&
-      props.userCurrent1 < currentTotal * 1.05
+      props.userCurrent1 > currentOne * 0.95 &&
+      props.userCurrent1 < currentOne * 1.05
     ) {
       props.changeI1Color('green');
     } else {
@@ -67,8 +72,8 @@ function App(props) {
     }
     // Current 2
     if (
-      props.userCurrent2 > currentTotal * 0.95 &&
-      props.userCurrent2 < currentTotal * 1.05
+      props.userCurrent2 > currentTwo * 0.95 &&
+      props.userCurrent2 < currentTwo * 1.05
     ) {
       props.changeI2Color('green');
     } else {
@@ -99,7 +104,7 @@ function App(props) {
     <div className='App'>
       <h1>Circuit example</h1>
       <div className='circuitPicture'>
-        <img src={Series2} alt='Series Circuit' />
+        <img src={Parallel2} alt='Parallel Circuit' />
       </div>
       <div className='ValueDisplay'>
         <Voltage />
@@ -111,7 +116,11 @@ function App(props) {
         get the wrong answer.
       </p>
       <div className='buttonBox'>
-        <button onClick={checkAnswers}>Check Answers</button>
+        {props.voltageTotal === '' ? (
+          ''
+        ) : (
+          <button onClick={checkAnswers}>Check Answers</button>
+        )}
         <button onClick={refresh}>Start New Problem</button>
       </div>
     </div>
