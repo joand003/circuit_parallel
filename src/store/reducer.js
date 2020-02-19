@@ -24,7 +24,8 @@ const initialState = {
   isI1Correct: false,
   isI2Correct: false,
   isRTCorrect: false,
-  isShowAnswers: false
+  isShowAnswers: false,
+  areVariablesLoaded: false
 };
 
 const reducer = (state = initialState, action) => {
@@ -171,6 +172,12 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isShowAnswers: action.payload
+      };
+
+    case actionTypes.CHANGE_ARE_VARIABLES_LOADED:
+      return {
+        ...state,
+        areVariablesLoaded: action.payload
       };
 
     default:

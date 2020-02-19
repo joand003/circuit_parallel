@@ -122,6 +122,7 @@ function App(props) {
     props.changeAnswerMode(false);
     props.changeNumberCorrect(0);
     props.changeIsShowAnswers(false);
+    props.changeAreVariablesLoaded(true);
   };
 
   const showAnswers = () => {
@@ -158,10 +159,10 @@ function App(props) {
           ''
         )}
 
-        {props.voltageTotal === '' ? (
-          ''
-        ) : (
+        {props.areVariablesLoaded === true && props.isShowAnswers === false ? (
           <button onClick={checkAnswers}>Check Answers</button>
+        ) : (
+          ''
         )}
         <button onClick={refresh}>Start New Problem</button>
       </div>
@@ -219,12 +220,17 @@ const mapStateToProps = state => {
     isI1Correct: state.isI1Correct,
     isI2Correct: state.isI2Correct,
     isRTCorrect: state.isRTCorrect,
-    isShowAnswers: state.isShowAnswers
+    isShowAnswers: state.isShowAnswers,
+    areVariablesLoaded: state.areVariablesLoaded
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
+    changeAreVariablesLoaded: payload => {
+      dispatch({ type: actionTypes.CHANGE_ARE_VARIABLES_LOADED, payload });
+    },
+
     changeIsShowAnswers: payload => {
       dispatch({ type: actionTypes.CHANGE_IS_SHOW_ANSWERS, payload });
     },
