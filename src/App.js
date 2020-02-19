@@ -23,14 +23,19 @@ function App(props) {
     Math.floor((props.voltageTotal / props.resistance2) * 1000) / 1000;
 
   const checkAnswers = () => {
+    props.changeAnswerMode(true);
+    let totalCorrect = 0;
     // Resistance Total
     if (
       props.userResistanceT > resistanceTotal * 0.95 &&
       props.userResistanceT < resistanceTotal * 1.05
     ) {
       props.changeRTColor('green');
+      totalCorrect++;
+      props.changeIsRTCorrect(true);
     } else {
       props.changeRTColor('red');
+      props.changeIsRTCorrect(false);
     }
 
     // Current Total
@@ -39,8 +44,11 @@ function App(props) {
       props.userCurrentT < currentTotal * 1.05
     ) {
       props.changeITColor('green');
+      totalCorrect++;
+      props.changeIsITCorrect(true);
     } else {
       props.changeITColor('red');
+      props.changeIsITCorrect(false);
     }
 
     // Voltage 1
@@ -49,8 +57,11 @@ function App(props) {
       props.userVoltage1 < voltageOne * 1.05
     ) {
       props.changeV1Color('green');
+      totalCorrect++;
+      props.changeIsV1Correct(true);
     } else {
       props.changeV1Color('red');
+      props.changeIsV1Correct(false);
     }
     // Voltage 2
     if (
@@ -58,8 +69,11 @@ function App(props) {
       props.userVoltage2 < voltageTwo * 1.05
     ) {
       props.changeV2Color('green');
+      totalCorrect++;
+      props.changeIsV2Correct(true);
     } else {
       props.changeV2Color('red');
+      props.changeIsV2Correct(false);
     }
     // Current 1
     if (
@@ -67,8 +81,11 @@ function App(props) {
       props.userCurrent1 < currentOne * 1.05
     ) {
       props.changeI1Color('green');
+      totalCorrect++;
+      props.changeIsI1Correct(true);
     } else {
       props.changeI1Color('red');
+      props.changeIsI1Correct(false);
     }
     // Current 2
     if (
@@ -76,9 +93,13 @@ function App(props) {
       props.userCurrent2 < currentTwo * 1.05
     ) {
       props.changeI2Color('green');
+      totalCorrect++;
+      props.changeIsI2Correct(true);
     } else {
       props.changeI2Color('red');
+      props.changeIsI2Correct(false);
     }
+    props.changeNumberCorrect(totalCorrect);
   };
 
   const refresh = () => {
@@ -98,7 +119,22 @@ function App(props) {
     props.changeUserVoltage1('');
     props.changeUserVoltage2('');
     props.changeUserResistanceT('');
+    props.changeAnswerMode(false);
+    props.changeNumberCorrect(0);
+    props.changeIsShowAnswers(false);
   };
+
+  const showAnswers = () => {
+    props.changeIsShowAnswers(true);
+  };
+
+  // const checkIfAnswersShowing = () => {
+  //   if (props.isShowAnswers === true) {
+  //     return '';
+  //   } else {
+  //     return <button onClick={checkAnswers}>Check Answers</button>;
+  //   }
+  // };
 
   return (
     <div className='App'>
@@ -112,16 +148,53 @@ function App(props) {
         <Resistance />
       </div>
       <p className='warning'>
-        Please be careful in your calculations. If you round too much you will
-        get the wrong answer.
+        Please be careful in your calculations.
+        <br></br>If you round too much you will get the wrong answer.
       </p>
       <div className='buttonBox'>
+        {props.checkAnswerMode === true ? (
+          <button onClick={showAnswers}>Show Answers</button>
+        ) : (
+          ''
+        )}
+
         {props.voltageTotal === '' ? (
           ''
         ) : (
           <button onClick={checkAnswers}>Check Answers</button>
         )}
         <button onClick={refresh}>Start New Problem</button>
+      </div>
+      <div className='results'>
+        {props.checkAnswerMode === true ? (
+          <p>You got {props.numberCorrect} out of 6 correct.</p>
+        ) : (
+          ''
+        )}
+        {props.isShowAnswers === true ? (
+          <div>
+            <p>
+              V<sub>1</sub>: {voltageOne}
+            </p>
+            <p>
+              V<sub>2</sub>: {voltageTwo}
+            </p>
+            <p>
+              I<sub>Total</sub>: {currentTotal}
+            </p>
+            <p>
+              I<sub>1</sub>: {currentOne}
+            </p>
+            <p>
+              I<sub>2</sub>: {currentTwo}
+            </p>
+            <p>
+              R<sub>Total</sub>: {resistanceTotal}
+            </p>
+          </div>
+        ) : (
+          ''
+        )}
       </div>
     </div>
   );
@@ -137,12 +210,55 @@ const mapStateToProps = state => {
     userResistanceT: state.userResistanceT,
     resistance1: state.resistance1,
     resistance2: state.resistance2,
-    voltageTotal: state.voltageTotal
+    voltageTotal: state.voltageTotal,
+    checkAnswerMode: state.checkAnswerMode,
+    numberCorrect: state.numberCorrect,
+    isV1Correct: state.isV1Correct,
+    isV2Correct: state.isV2Correct,
+    isITCorrect: state.isITCorrect,
+    isI1Correct: state.isI1Correct,
+    isI2Correct: state.isI2Correct,
+    isRTCorrect: state.isRTCorrect,
+    isShowAnswers: state.isShowAnswers
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
+    changeIsShowAnswers: payload => {
+      dispatch({ type: actionTypes.CHANGE_IS_SHOW_ANSWERS, payload });
+    },
+
+    changeIsV1Correct: payload => {
+      dispatch({ type: actionTypes.CHANGE_IS_V_1_CORRECT, payload });
+    },
+
+    changeIsV2Correct: payload => {
+      dispatch({ type: actionTypes.CHANGE_IS_V_2_CORRECT, payload });
+    },
+
+    changeIsITCorrect: payload => {
+      dispatch({ type: actionTypes.CHANGE_IS_I_T_CORRECT, payload });
+    },
+
+    changeIsI1Correct: payload => {
+      dispatch({ type: actionTypes.CHANGE_IS_I_1_CORRECT, payload });
+    },
+
+    changeIsI2Correct: payload => {
+      dispatch({ type: actionTypes.CHANGE_IS_I_2_CORRECT, payload });
+    },
+
+    changeIsRTCorrect: payload => {
+      dispatch({ type: actionTypes.CHANGE_IS_R_T_CORRECT, payload });
+    },
+
+    changeNumberCorrect: payload => {
+      dispatch({ type: actionTypes.CHANGE_NUMBER_CORRECT, payload });
+    },
+    changeAnswerMode: payload => {
+      dispatch({ type: actionTypes.CHANGE_CHECK_ANSWER_MODE, payload });
+    },
     changeRTColor: payload => {
       dispatch({ type: actionTypes.CHANGE_R_T_LABEL, payload });
     },

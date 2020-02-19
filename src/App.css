@@ -7,7 +7,7 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
   line-height: 1.4;
-  background-color: aquamarine;
+  background-color: rgb(139, 167, 202);
 }
 
 .circuitPicture {
@@ -33,17 +33,17 @@ a {
 }
 
 .VoltageBox {
-  display: grid;
+  display: flex;
   margin-right: 2em;
 }
 
 .CurrentBox {
-  display: grid;
+  display: flex;
   margin-right: 2em;
 }
 
 .ResistanceBox {
-  display: grid;
+  display: flex;
   margin-right: 2em;
 }
 
@@ -64,4 +64,32 @@ input {
   text-align: center;
   margin-left: 3em;
   margin-right: 3em;
+}
+
+.results {
+  text-align: center;
+  margin-left: 3em;
+  margin-right: 3em;
+}
+
+form {
+  display: inline;
+}
+
+.variableContainer {
+  display: grid;
+  grid-template-columns: 1fr, 1fr, 1fr;
+}
+
+.correctContainer {
+  grid-column: 1/2;
+  padding-right: 0.5em;
+}
+
+.unitContainer {
+  grid-column: 2/3;
+}
+
+.answerContainer {
+  grid-column: 3/4;
 }
